@@ -1,10 +1,6 @@
-#ifndef MEVector
-#define MEVector
+#pragma once
 
-#include <cmath>
-#include <stdexcept>
 #include <string>
-#include <sstream>
 
 namespace MathEngine{
     class Vector3
@@ -87,4 +83,3 @@ namespace MathEngine{
         bool Equals(const Vector3& v)const;
     };
 }
-#endif

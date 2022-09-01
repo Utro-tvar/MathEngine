@@ -1,5 +1,9 @@
 #include "Vector3.hpp"
 
+#include <cmath>
+#include <stdexcept>
+#include <sstream>
+
 namespace MathEngine{
     Vector3::Vector3():_x(0.0),_y(0.0),_z(0.0){}
     Vector3::Vector3(const float& x, const float& y, const float& z):_x(x),_y(y),_z(z){}
