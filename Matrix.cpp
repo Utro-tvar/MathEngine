@@ -5,15 +5,14 @@
 #include <iostream>
 
 namespace MathEngine{
-    Matrix::Matrix(const int& width, const int& height, const float* data):
+    Matrix::Matrix(const int& width, const int& height, const std::vector<float>& data):
     _w(width), _h(height){
+        if(data.size() != _w * _h){
+            throw std::invalid_argument("Matrix and array sizes must be same to construct matrix, but they're not!");
+        }
         _data = new float[_w * _h];
         for (int i = 0; i < _w * _h; ++i){
-            try{
-                _data[i] = data[i];
-            }catch(std::out_of_range e){
-                throw "Matrix and array sizes must be same, but they're not!";
-            }
+            _data[i] = data.at(i);
         }
     }
 
@@ -56,12 +55,12 @@ namespace MathEngine{
         if (row >= _h){
             std::stringstream message;
             message << "This matrix hasn't row " << row << "!";
-            throw message.str();
+            throw std::invalid_argument(message.str());
         }
         if (column >= _w){
             std::stringstream message;
             message << "This matrix hasn't column " << column << "!";
-            throw message.str();
+            throw std::invalid_argument(message.str());
         }
         Matrix result(column == -1 ? _w : _w - 1, row == -1 ? _h : _h - 1);
         int i = 0;
@@ -80,7 +79,7 @@ namespace MathEngine{
 
     void Matrix::SwapRows(const unsigned& a, const unsigned& b){
         if (a >= _h || b >= _h)
-            throw "Row index out of range!";
+            throw std::out_of_range("Row index out of range!");
         for (int n1 = _w * a, n2 = _w * b; n1 < _w * (a + 1); ++n1, ++n2){
             int t = _data[n1];
             _data[n1] = _data[n2];
@@ -90,7 +89,7 @@ namespace MathEngine{
 
     void Matrix::SwapColumns(const unsigned& a, const unsigned& b){
         if (a >= _w || b >= _w)
-            throw "Column index out of range!";
+            throw std::out_of_range("Column index out of range!");
         for (int n1 = a, n2 = b; n1 < _h * _w; n1 += _w, n2 += _w){
             int t = _data[n1];
             _data[n1] = _data[n2];
@@ -100,7 +99,7 @@ namespace MathEngine{
 
     const float& Matrix::operator()(const unsigned& i, const unsigned& j)const{
         if (i >= _w || j >= _h)
-            throw "Index out of matrix";
+            throw std::out_of_range("Index out of matrix");
         return _data[j * _w + i];
     }
 
@@ -130,7 +129,7 @@ namespace MathEngine{
 
     Matrix Matrix::operator* (const Matrix& m)const{
         if (_w != m._h)
-            throw "The width of the first matrix should match the height of the other, but it doesn't!";
+            throw std::invalid_argument("The width of the first matrix should match the height of the other, but it doesn't!");
         Matrix result(m._w, _h);
         for (int x = 0; x < m._w; ++x){
             for (int y = 0; y < _h; ++y){
@@ -145,7 +144,7 @@ namespace MathEngine{
 
     Matrix Matrix::operator+ (const Matrix& m)const{
         if (_w != m._w || _h != m._h)
-            throw "The matrices should have the same dimensions for addition!";
+            throw std::invalid_argument("The matrices should have the same dimensions for addition!");
         Matrix result = *this;
         result += m;
         return result;
@@ -153,7 +152,7 @@ namespace MathEngine{
 
     void Matrix::operator+= (const Matrix& m){
         if (_w != m._w || _h != m._h)
-            throw "The matrices should have the same dimensions for addition!";
+            throw std::invalid_argument("The matrices should have the same dimensions for addition!");
         for (int i = 0; i < _w * _h; ++i)
             _data[i] += m._data[i];
         _determinant = 0;
@@ -161,7 +160,7 @@ namespace MathEngine{
 
     Matrix Matrix::operator- (const Matrix& m)const{
         if (_w != m._w || _h != m._h)
-            throw "The matrices should have the same dimensions for subtraction!";
+            throw std::invalid_argument("The matrices should have the same dimensions for subtraction!");
         Matrix result = *this;
         result -= m;
         return result;
@@ -169,7 +168,7 @@ namespace MathEngine{
 
     void Matrix::operator-= (const Matrix& m){
         if (_w != m._w || _h != m._h)
-            throw "The matrices should have the same dimensions for addition!";
+            throw std::invalid_argument("The matrices should have the same dimensions for addition!");
         for (int i = 0; i < _w * _h; ++i)
             _data[i] -= m._data[i];
         _determinant = 0;
@@ -187,7 +186,7 @@ namespace MathEngine{
 
     float Matrix::Determinant(){
         if (_w != _h)
-            throw "Only square matrix has determinant!";
+            throw std::runtime_error("Only square matrix has determinant!");
         if (_determinant != 0) return _determinant;
         if (_w == 2){
             _determinant = _data[0] * _data[3] - _data[1] * _data[2];
@@ -210,7 +209,7 @@ namespace MathEngine{
 
     Matrix Matrix::GetInversed(){
         if (_w != _h)
-            throw "Only square matrix can be inversed!";
+            throw std::runtime_error("Only square matrix can be inversed!");
         Matrix result(_w, _h);
         for (int y = 0; y < _h; ++y){
             for (int x = 0; x < _w; ++x){

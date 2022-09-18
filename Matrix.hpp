@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <vector>
 
 namespace MathEngine{
     class Matrix
@@ -11,7 +12,7 @@ namespace MathEngine{
         float _determinant = 0;
     public:
         //creates matrix from data (rows connected from top to down)
-        Matrix(const int& width, const int& height, const float* data);
+        Matrix(const int& width, const int& height, const std::vector<float>& data);
         //creates matrix filled by 'fill' value
         Matrix(const int& width, const int& height, const float& fill = 0);
         //creates copy of the matrix
