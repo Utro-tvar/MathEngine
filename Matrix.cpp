@@ -85,6 +85,7 @@ namespace MathEngine{
             _data[n1] = _data[n2];
             _data[n2] = t;
         }
+        _determinant = -_determinant;
     }
 
     void Matrix::SwapColumns(const unsigned& a, const unsigned& b){
@@ -95,6 +96,7 @@ namespace MathEngine{
             _data[n1] = _data[n2];
             _data[n2] = t;
         }
+        _determinant = -_determinant;
     }
 
     const float& Matrix::operator()(const unsigned& i, const unsigned& j)const{
